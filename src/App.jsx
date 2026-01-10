@@ -21,8 +21,8 @@ const I18N = {
     'zh-TW': {
         ui: {
             title: 'LifeOS Audit',
-            subtitle: 'LLaMA 3.1 405B Hyper-Core',
-            version: 'v7.0 AI',
+            subtitle: 'GEMINI 2.0 FLASH EXPERIMENTAL',
+            version: 'v7.1 AI',
             restart: 'REBOOT SYSTEM',
             startBtn: 'RUN DEEP SCAN',
             awaiting: 'WAITING FOR INPUT...',
@@ -37,9 +37,9 @@ const I18N = {
                 console: 'SYSTEM CONSOLE 系統終端'
             },
             loading: {
-                main: 'DEEPSEEK-R1 IS REASONING...',
+                main: 'GEMINI 2.0 IS REASONING...',
                 logs: [
-                    '> Initializing DeepSeek Reasoning Engine...',
+                    '> Initializing Gemini 2.0 Flash Engine...',
                     '> Processing Sociological Parameters...',
                     '> Running Multi-Dimensional Analysis...',
                     '> Synthesizing Strategic Insights...'
@@ -350,60 +350,67 @@ const runDeepSeekAnalysis = async (formData) => {
 - 給予具體可行的建議
 - **所有文字（包括title）100%繁體中文**
 - 純JSON輸出，不要markdown標記`;
+        console.log("🚀 Sending data to Gemini 2.0 Flash Backend...");
 
+        // 設定 15秒超時 (Cloudflare 免費版 Workers 限制極限)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
-
-        const response = await fetch(NVIDIA_API_ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${nvidiaApiKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: "meta/llama-3.1-405b-instruct",
-                messages: [{ role: "user", content: prompt }],
-                temperature: 0.7,
-                max_tokens: 8192,
-                top_p: 0.9
-            }),
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-            const errText = await response.text();
-            throw new Error(`API Error ${response.status}: ${errText}`);
-        }
-
-        const data = await response.json();
-        const aiText = data.choices[0].message.content;
-
-        // 增強型 JSON 提取器：尋找最外層的 JSON 物件
-        // 應對 DeepSeek <think> 標籤，尋找最後一個 } 結尾
-        const jsonMatch = aiText.match(/\{[\s\S]*\}/);
-
-        if (!jsonMatch) {
-            console.error("No JSON structure found in response:", aiText);
-            throw new Error("Invalid API Response Format: No JSON found");
-        }
-
-        const cleanJson = jsonMatch[0];
+        const timeoutId = setTimeout(() => {
+            console.warn("⚠️ Request Timed Out (15s limit). Switching to Fallback Mode.");
+            controller.abort();
+        }, 15000);
 
         try {
-            return JSON.parse(cleanJson);
-        } catch (parseError) {
-            console.error("JSON Parse Error:", parseError, cleanJson);
-            throw new Error(`JSON Parse Error: ${parseError.message}`);
-        }
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData), // 現在直接傳送 formData，Prompt 由後端處理
+                signal: controller.signal
+            });
 
-    } catch (error) {
-        console.error("DeepSeek API Error:", error);
-        // 將錯誤訊息注入到 Mock Data 中以便 Debug
-        const fallback = await mockFallback(formData);
-        fallback.childhood_audit.content = `[SYSTEM ERROR] ${error.message} (Showing Fallback Data)`;
-        return fallback;
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.details || errorData.error || `HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // 嘗試解析回傳的 JSON (以防後端回傳字串)
+            if (typeof data === 'string') {
+                // 這是為了相容舊版 API，如果直接回傳 JSON 則不需要
+                const jsonMatch = data.match(/\{[\s\S]*\}/);
+                return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(data);
+            } else if (data.text) {
+                // 新版後端結構 (Gemini Function)
+                const cleanText = data.text.replace(/```json/g, '').replace(/```/g, '').trim();
+                const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+                return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(cleanText);
+            }
+
+            // 如果直接是物件
+            return data;
+
+        } catch (error) {
+            console.error("Analysis Engine Error:", error);
+            clearTimeout(timeoutId);
+            // 發生任何錯誤 (包括超時) 都切換到 Mock Data
+            const fallback = await mockFallback(formData);
+
+            // 根據錯誤類型顯示不同訊息
+            const errorMsg = error.name === 'AbortError'
+                ? "[分析超時] AI 思考過久，這是為您準備的基礎分析 (System Fallback)"
+                : `[系統連線錯誤] ${error.message} (目前顯示範例資料)`;
+
+            fallback.childhood_audit.content = errorMsg;
+            return fallback;
+        }
+    } catch (outerError) {
+        // 最外層捕捉，防止任何未預期的錯誤導致 App 崩潰
+        console.error("Critical Error", outerError);
+        return await mockFallback(formData);
     }
 };
 
@@ -414,48 +421,37 @@ const runDeepSeekAnalysis = async (formData) => {
  * ------------------------------------------------------------------
  */
 const runDeepSeekChat = async (history, userQuery, userContext) => {
-    if (!nvidiaApiKey) {
-        return "System Error: API Key missing. Terminal offline. (Mock Mode)";
-    }
-
     try {
-        const historyStr = history.map(h => `${h.role}: ${h.content}`).join('\n');
-        const contextStr = JSON.stringify(userContext);
+        // Chat 也可以設定一個短一點的 Timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-        const prompt = `
-      Role: You are the OS Kernel of the user. 
-      System Context: ${contextStr}
-      Chat History: ${historyStr}
-      Task: Answer the user's query as a System Administrator.
-      Style: CLI terminal style, brief, tech metaphors, strict but helpful.
-      Language: Traditional Chinese (Taiwan).
-      
-      User Query: ${userQuery}
-    `;
-
-        const response = await fetch(NVIDIA_API_ENDPOINT, {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${nvidiaApiKey}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: "meta/llama-3.1-405b-instruct",
-                messages: [{ role: "user", content: prompt }],
-                temperature: 0.7,
-                max_tokens: 1024
-            })
+                history,
+                userQuery,
+                userContext
+            }),
+            signal: controller.signal
         });
 
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Chat Failed');
         }
 
         const data = await response.json();
-        return data.choices[0].message.content;
+        return data.text;
+
     } catch (error) {
-        console.error("DeepSeek Chat Error:", error);
-        return "Error: Connection timeout. Packet lost.";
+        console.error("Chat Error:", error);
+        return `[系統離線] 無法連接至大腦主機 (${error.message})`;
     }
 };
 
