@@ -1,0 +1,6 @@
+name = "lifeos-audit"
+pages_build_output_dir = "dist"
+
+# 強制覆寫 Build Command，繞過 npm ci
+[build]
+command = "npm run cf-build"
