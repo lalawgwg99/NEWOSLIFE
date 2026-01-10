@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Not Found | LifeOS Audit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: white;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 600px;
+            border: 4px solid black;
+            padding: 3rem;
+            background: white;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #16a34a;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background: black;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid black;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #16a34a;
+            border-color: #16a34a;
+            transform: translate(2px, 2px);
+        }
+
+        .code {
+            background: #f5f5f5;
+            padding: 0.2rem 0.5rem;
+            border: 2px solid black;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <h2>系統錯誤：頁面不存在</h2>
+        <p>
+            <span class="code">[SYSTEM ERROR]</span>
+            找不到您請求的頁面。可能是路徑錯誤，或該頁面已被移除。
+        </p>
+        <p>
+            建議執行 <strong>系統重啟</strong> 返回主頁面，重新開始您的人生分析。
+        </p>
+        <a href="/" class="btn">← 返回主頁</a>
+    </div>
+</body>
+
+</html>

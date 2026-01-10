@@ -1,0 +1,15 @@
+# robots.txt for LifeOS Audit
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://lifeos-audit.pages.dev/sitemap.xml
+
+# Crawl-delay (optional, for politeness)
+Crawl-delay: 1
+
+# Block access to sensitive files (if any)
+Disallow: /api/
+Disallow: /.env
+Disallow: /node_modules/
