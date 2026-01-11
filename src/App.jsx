@@ -214,12 +214,12 @@ const mockFallback = (data) => {
 const runDeepSeekAnalysis = async (formData) => {
     console.log("🚀 Sending data to Gemini 2.0 Flash Backend...");
 
-    // 設定 15秒超時 (Cloudflare 免費版 Workers 限制極限)
+    // 設定 60秒超時 (Gemini 長文本生成需要較長時間)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
-        console.warn("⚠️ Request Timed Out (15s limit). Switching to Fallback Mode.");
+        console.warn("⚠️ Request Timed Out (60s limit). Switching to Fallback Mode.");
         controller.abort();
-    }, 15000);
+    }, 60000);
 
     try {
         const response = await fetch('/api/analyze', {
