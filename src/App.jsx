@@ -316,13 +316,13 @@ const runDeepSeekChat = async (history, userQuery, userContext) => {
 
 const InputField = ({ label, type = "text", value, onChange, options = null, placeholder = "" }) => (
     <div className="flex flex-col gap-2 w-full group">
-        <label className="text-xs font-bold text-black uppercase tracking-wider group-hover:text-green-700 transition-colors">{label}</label>
+        <label className="text-xs font-semibold text-muted uppercase tracking-wider group-hover:text-accent transition-colors">{label}</label>
         {options ? (
             <div className="relative">
                 <select
                     value={value}
                     onChange={onChange}
-                    className="w-full bg-white border-2 border-black rounded-none px-4 py-3 text-base font-medium focus:outline-none focus:bg-green-50 focus:border-green-700 transition-colors appearance-none cursor-pointer"
+                    className="w-full bg-white/80 border border-gray-200 rounded-xl px-4 py-3.5 text-base font-medium focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent shadow-card transition-all duration-200 appearance-none cursor-pointer"
                 >
                     <option value="" disabled>--- SELECT ---</option>
                     {options.map((opt, i) => {
@@ -331,7 +331,7 @@ const InputField = ({ label, type = "text", value, onChange, options = null, pla
                         return <option key={val || i} value={val}>{lbl}</option>;
                     })}
                 </select>
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-black font-bold">▼</div>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted font-bold">▼</div>
             </div>
         ) : (
             <input
@@ -339,7 +339,7 @@ const InputField = ({ label, type = "text", value, onChange, options = null, pla
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className="w-full bg-white border-2 border-black rounded-none px-4 py-3 text-base font-medium placeholder-gray-400 focus:outline-none focus:bg-green-50 focus:border-green-700 transition-colors"
+                className="w-full bg-white/80 border border-gray-200 rounded-xl px-4 py-3.5 text-base font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent shadow-card transition-all duration-200"
             />
         )}
     </div>
@@ -377,14 +377,14 @@ const TypewriterText = ({ text, speed = 20, delay = 0 }) => {
 
 const ResultCard = ({ title, content, icon: Icon, delay }) => (
     <div
-        className="bg-white border-2 border-black p-5 h-full flex flex-col hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300"
+        className="bg-paper rounded-2xl p-6 h-full flex flex-col shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
         style={{ animation: `fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`, animationDelay: `${delay}ms`, opacity: 0 }}
     >
-        <h3 className="font-black text-xs uppercase tracking-widest mb-4 pb-2 border-b-2 border-black/10 flex items-center gap-2 text-black">
-            {Icon && <Icon size={14} className="text-green-700" />}
+        <h3 className="font-mono font-bold text-xs uppercase tracking-widest mb-4 pb-3 border-b border-gray-100 flex items-center gap-2 text-ink">
+            {Icon && <Icon size={14} className="text-accent" />}
             {title}
         </h3>
-        <p className="text-sm font-medium leading-6 text-black whitespace-pre-line text-justify flex-grow opacity-90">
+        <p className="font-sans text-base leading-7 text-ink/85 whitespace-pre-line text-left flex-grow">
             <TypewriterText text={content} speed={15} delay={delay + 300} />
         </p>
     </div>
@@ -392,66 +392,66 @@ const ResultCard = ({ title, content, icon: Icon, delay }) => (
 
 const ScoreCard = ({ scoreData }) => {
     const getGradeColor = (grade) => {
-        if (grade === 'Excellent') return 'bg-green-600';
-        if (grade === 'Good') return 'bg-green-500';
-        if (grade === 'Fair') return 'bg-yellow-500';
-        return 'bg-red-500';
+        if (grade === 'Excellent') return 'bg-emerald-400';
+        if (grade === 'Good') return 'bg-emerald-500';
+        if (grade === 'Fair') return 'bg-amber-400';
+        return 'bg-rose-400';
     };
 
     return (
         <div
-            className="bg-black text-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(22,163,74,1)]"
+            className="bg-gradient-to-br from-emerald-800 to-emerald-950 text-white rounded-2xl p-8 shadow-elevated"
             style={{ animation: `fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`, animationDelay: `0ms`, opacity: 0 }}
         >
-            <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-white/20">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
                 <div>
-                    <h2 className="font-black text-2xl uppercase tracking-tighter text-green-400">LIFE OS HEALTH SCORE</h2>
-                    <p className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">人生系統健康評分 (Credit Score Style)</p>
+                    <h2 className="font-mono font-bold text-xl uppercase tracking-tight text-emerald-300">LIFE OS HEALTH SCORE</h2>
+                    <p className="text-[10px] font-medium text-emerald-200/60 mt-1 uppercase tracking-wider">人生系統健康評分 (Credit Score Style)</p>
                 </div>
                 <div className="text-right">
-                    <div className="text-5xl font-black text-green-400">{scoreData?.total || 750}</div>
-                    <span className={`text-xs font-bold ${getGradeColor(scoreData?.grade || 'Good')} text-black px-3 py-1 mt-2 inline-block`}>
+                    <div className="text-5xl font-bold text-white">{scoreData?.total || 750}</div>
+                    <span className={`text-xs font-bold ${getGradeColor(scoreData?.grade || 'Good')} text-emerald-950 px-3 py-1 mt-2 inline-block rounded-full`}>
                         {scoreData?.grade || 'GOOD'}
                     </span>
                 </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                <div className="border-l-4 border-green-500 pl-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">EMOTIONAL STABILITY</p>
-                    <p className="text-[9px] text-gray-500 mb-1">情緒穩定度</p>
-                    <p className="text-2xl font-black text-white">{scoreData?.emotional_stability || 720}</p>
+                <div className="border-l-2 border-emerald-400/50 pl-3">
+                    <p className="text-[10px] font-medium text-emerald-200/70 uppercase tracking-wider">EMOTIONAL STABILITY</p>
+                    <p className="text-[9px] text-emerald-300/50 mb-1">情緒穩定度</p>
+                    <p className="text-2xl font-bold text-white">{scoreData?.emotional_stability || 720}</p>
                 </div>
-                <div className="border-l-4 border-green-500 pl-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">RELATIONSHIP QUALITY</p>
-                    <p className="text-[9px] text-gray-500 mb-1">關係品質</p>
-                    <p className="text-2xl font-black text-white">{scoreData?.relationship_quality || 650}</p>
+                <div className="border-l-2 border-emerald-400/50 pl-3">
+                    <p className="text-[10px] font-medium text-emerald-200/70 uppercase tracking-wider">RELATIONSHIP QUALITY</p>
+                    <p className="text-[9px] text-emerald-300/50 mb-1">關係品質</p>
+                    <p className="text-2xl font-bold text-white">{scoreData?.relationship_quality || 650}</p>
                 </div>
-                <div className="border-l-4 border-green-500 pl-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">CAREER ALIGNMENT</p>
-                    <p className="text-[9px] text-gray-500 mb-1">職涯契合度</p>
-                    <p className="text-2xl font-black text-white">{scoreData?.career_alignment || 780}</p>
+                <div className="border-l-2 border-emerald-400/50 pl-3">
+                    <p className="text-[10px] font-medium text-emerald-200/70 uppercase tracking-wider">CAREER ALIGNMENT</p>
+                    <p className="text-[9px] text-emerald-300/50 mb-1">職涯契合度</p>
+                    <p className="text-2xl font-bold text-white">{scoreData?.career_alignment || 780}</p>
                 </div>
-                <div className="border-l-4 border-green-500 pl-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">FINANCIAL MINDSET</p>
-                    <p className="text-[9px] text-gray-500 mb-1">財務心態</p>
-                    <p className="text-2xl font-black text-white">{scoreData?.financial_mindset || 690}</p>
+                <div className="border-l-2 border-emerald-400/50 pl-3">
+                    <p className="text-[10px] font-medium text-emerald-200/70 uppercase tracking-wider">FINANCIAL MINDSET</p>
+                    <p className="text-[9px] text-emerald-300/50 mb-1">財務心態</p>
+                    <p className="text-2xl font-bold text-white">{scoreData?.financial_mindset || 690}</p>
                 </div>
-                <div className="border-l-4 border-green-500 pl-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">ENERGY MANAGEMENT</p>
-                    <p className="text-[9px] text-gray-500 mb-1">能量管理</p>
-                    <p className="text-2xl font-black text-white">{scoreData?.energy_management || 710}</p>
+                <div className="border-l-2 border-emerald-400/50 pl-3">
+                    <p className="text-[10px] font-medium text-emerald-200/70 uppercase tracking-wider">ENERGY MANAGEMENT</p>
+                    <p className="text-[9px] text-emerald-300/50 mb-1">能量管理</p>
+                    <p className="text-2xl font-bold text-white">{scoreData?.energy_management || 710}</p>
                 </div>
-                <div className="border-l-4 border-yellow-500 pl-3">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">PERCENTILE RANK</p>
-                    <p className="text-[9px] text-gray-500 mb-1">百分位排名</p>
-                    <p className="text-2xl font-black text-yellow-400">TOP {100 - (scoreData?.percentile || 68)}%</p>
+                <div className="border-l-2 border-amber-400/50 pl-3">
+                    <p className="text-[10px] font-medium text-emerald-200/70 uppercase tracking-wider">PERCENTILE RANK</p>
+                    <p className="text-[9px] text-emerald-300/50 mb-1">百分位排名</p>
+                    <p className="text-2xl font-bold text-amber-300">TOP {100 - (scoreData?.percentile || 68)}%</p>
                 </div>
             </div>
 
-            <div className="mt-4 p-3 bg-green-900/30 border border-green-700/50">
-                <p className="text-xs font-bold text-green-400">
-                    🎯 你擊敗了 <span className="text-white text-lg">{scoreData?.percentile || 68}%</span> 的同齡人
+            <div className="mt-4 p-4 bg-emerald-700/30 rounded-xl border border-emerald-600/30">
+                <p className="text-sm font-medium text-emerald-200">
+                    🎯 你擊敗了 <span className="text-white text-lg font-bold">{scoreData?.percentile || 68}%</span> 的同齡人
                 </p>
             </div>
         </div>
@@ -460,25 +460,25 @@ const ScoreCard = ({ scoreData }) => {
 
 const HotfixCard = ({ tasks, title }) => (
     <div
-        className="bg-black text-white border-2 border-black p-6 shadow-[8px_8px_0px_0px_rgba(22,163,74,1)]"
+        className="bg-gradient-to-br from-emerald-800 to-emerald-950 text-white rounded-2xl p-6 shadow-elevated"
         style={{ animation: `fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`, animationDelay: `900ms`, opacity: 0 }}
     >
-        <div className="flex items-center justify-between mb-6 pb-2 border-b-2 border-white/20">
-            <h3 className="font-black text-sm uppercase tracking-widest text-green-400 flex items-center gap-2">
+        <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+            <h3 className="font-mono font-bold text-sm uppercase tracking-widest text-emerald-300 flex items-center gap-2">
                 <Activity size={16} />
                 {title}
             </h3>
-            <span className="text-[10px] font-bold bg-green-600 text-black px-2 py-1">PRIORITY: HIGH</span>
+            <span className="text-[10px] font-bold bg-emerald-400 text-emerald-950 px-3 py-1 rounded-full">PRIORITY: HIGH</span>
         </div>
         <div className="space-y-4">
             {tasks.map((task, index) => (
                 <div key={task.id} className="flex items-start gap-3">
-                    <div className="mt-1 w-4 h-4 border-2 border-green-500 flex items-center justify-center shrink-0">
-                        <Check size={10} className="text-green-500" />
+                    <div className="mt-1 w-5 h-5 bg-emerald-500/20 border border-emerald-400/50 rounded flex items-center justify-center shrink-0">
+                        <Check size={12} className="text-emerald-400" />
                     </div>
                     <div>
-                        <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider block mb-1">[{task.type}]</span>
-                        <p className="text-sm font-bold text-white leading-snug">
+                        <span className="text-[10px] font-medium text-emerald-300/80 uppercase tracking-wider block mb-1">[{task.type}]</span>
+                        <p className="font-sans text-sm font-medium text-white/90 leading-relaxed">
                             <TypewriterText text={task.text} speed={12} delay={1200 + index * 400} />
                         </p>
                     </div>
@@ -508,18 +508,18 @@ const SystemConsole = ({ title, placeholder, onSend, history }) => {
     };
 
     return (
-        <div className="bg-gray-100 border-2 border-black p-4 mt-8 font-mono shadow-inner" style={{ animation: `fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`, animationDelay: `1000ms`, opacity: 0 }}>
-            <div className="flex items-center gap-2 mb-3 border-b-2 border-black/10 pb-2">
-                <Terminal size={16} className="text-black" />
-                <h3 className="font-black text-xs uppercase tracking-widest text-black">{title}</h3>
+        <div className="bg-zinc-900 rounded-2xl p-5 mt-8 font-mono shadow-elevated" style={{ animation: `fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards`, animationDelay: `1000ms`, opacity: 0 }}>
+            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-zinc-700/50">
+                <Terminal size={16} className="text-emerald-400" />
+                <h3 className="font-bold text-xs uppercase tracking-widest text-zinc-300">{title}</h3>
             </div>
 
-            <div className="h-48 overflow-y-auto mb-4 space-y-3 p-2 bg-white border-2 border-black/5">
-                {history.length === 0 && <p className="text-xs text-gray-400 italic">System Ready. Awaiting commands...</p>}
+            <div className="h-48 overflow-y-auto mb-4 space-y-3 p-3 bg-zinc-950 rounded-xl">
+                {history.length === 0 && <p className="text-xs text-zinc-500 italic">System Ready. Awaiting commands...</p>}
                 {history.map((msg, i) => (
                     <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                        <div className={`max-w-[85%] p-2 text-xs font-bold ${msg.role === 'user' ? 'bg-black text-white' : 'bg-green-100 text-black border border-green-200'}`}>
-                            <span className="opacity-50 text-[10px] block mb-1 uppercase">{msg.role === 'user' ? 'User' : 'Root'}</span>
+                        <div className={`max-w-[85%] p-3 text-xs font-medium rounded-xl ${msg.role === 'user' ? 'bg-emerald-600 text-white' : 'bg-zinc-800 text-zinc-100'}`}>
+                            <span className="opacity-60 text-[10px] block mb-1 uppercase">{msg.role === 'user' ? 'User' : 'System'}</span>
                             {msg.content}
                         </div>
                     </div>
@@ -529,15 +529,15 @@ const SystemConsole = ({ title, placeholder, onSend, history }) => {
 
             <form onSubmit={handleSubmit} className="flex gap-2">
                 <div className="relative flex-grow">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-green-600 font-bold">{'>'}</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500 font-bold">{'>'}</span>
                     <input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder={placeholder}
-                        className="w-full bg-white border-2 border-black py-2 pl-6 pr-2 text-sm font-medium focus:outline-none focus:bg-green-50 transition-colors"
+                        className="w-full bg-zinc-800 border border-zinc-700 rounded-xl py-2.5 pl-7 pr-3 text-sm font-medium text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                     />
                 </div>
-                <button type="submit" className="bg-black text-white px-4 py-2 text-xs font-bold uppercase hover:bg-green-600 transition-colors flex items-center gap-1">
+                <button type="submit" className="bg-emerald-600 text-white px-5 py-2.5 text-xs font-bold uppercase rounded-xl hover:bg-emerald-500 transition-colors flex items-center gap-1.5">
                     EXECUTE <ArrowRight size={12} />
                 </button>
             </form>
@@ -647,20 +647,20 @@ export default function App() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-black font-mono p-6 md:p-12 flex flex-col items-center">
+        <div className="min-h-screen bg-cream text-ink font-sans p-6 md:p-12 flex flex-col items-center">
             <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
 
             {/* HEADER */}
-            <header className="w-full max-w-4xl flex justify-between items-end mb-10 border-b-4 border-black pb-4">
+            <header className="w-full max-w-4xl flex justify-between items-end mb-10 border-b border-gray-200 pb-6">
                 <div>
-                    <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase flex items-center gap-3">
-                        <Terminal className="text-black" size={32} strokeWidth={3} />
-                        {t.title}
+                    <h1 className="text-3xl md:text-5xl font-bold tracking-tight flex items-center gap-3">
+                        <Terminal className="text-accent" size={32} strokeWidth={2.5} />
+                        <span className="font-mono">{t.title}</span>
                     </h1>
-                    <p className="text-xs md:text-sm font-bold mt-2 uppercase tracking-widest text-gray-500">
-                        {t.subtitle} <span className="bg-green-600 text-white px-2 py-0.5 ml-2">{t.version}</span>
+                    <p className="text-xs md:text-sm font-medium mt-2 uppercase tracking-widest text-muted">
+                        {t.subtitle} <span className="bg-accent text-white px-2 py-0.5 ml-2 rounded">{t.version}</span>
                     </p>
                 </div>
 
@@ -668,13 +668,13 @@ export default function App() {
                 <div className="flex gap-2">
                     <button
                         onClick={() => setLanguage('zh-TW')}
-                        className={`px-3 py-2 text-xs font-bold uppercase border-2 transition-all ${language === 'zh-TW' ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300 hover:border-black'}`}
+                        className={`px-3 py-2 text-xs font-semibold uppercase rounded-lg transition-all ${language === 'zh-TW' ? 'bg-ink text-white' : 'bg-white text-ink border border-gray-200 hover:border-accent'}`}
                     >
                         繁中
                     </button>
                     <button
                         onClick={() => setLanguage('en-US')}
-                        className={`px-3 py-2 text-xs font-bold uppercase border-2 transition-all ${language === 'en-US' ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300 hover:border-black'}`}
+                        className={`px-3 py-2 text-xs font-semibold uppercase rounded-lg transition-all ${language === 'en-US' ? 'bg-ink text-white' : 'bg-white text-ink border border-gray-200 hover:border-accent'}`}
                     >
                         EN
                     </button>
@@ -691,7 +691,7 @@ export default function App() {
 
                             {/* KERNEL SPECS */}
                             <div className="md:col-span-1 space-y-8">
-                                <h3 className="text-sm font-black bg-black text-white inline-block px-2 py-1 mb-2">{t.sections.kernel}</h3>
+                                <h3 className="text-xs font-semibold text-muted uppercase tracking-widest mb-4 flex items-center gap-2"><span className="w-6 h-0.5 bg-accent rounded"></span>{t.sections.kernel}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label={opts.labels.birthDate} type="date" value={formData.birthDate} onChange={e => handleInputChange('birthDate', e.target.value)} />
                                     <InputField label={opts.labels.birthLocation} value={formData.birthLocation} onChange={e => handleInputChange('birthLocation', e.target.value)} />
@@ -702,7 +702,7 @@ export default function App() {
 
                             {/* SOCIAL VARS & ECONOMICS */}
                             <div className="md:col-span-1 space-y-8">
-                                <h3 className="text-sm font-black bg-black text-white inline-block px-2 py-1 mb-2">{t.sections.social}</h3>
+                                <h3 className="text-xs font-semibold text-muted uppercase tracking-widest mb-4 flex items-center gap-2"><span className="w-6 h-0.5 bg-accent rounded"></span>{t.sections.social}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField label={opts.labels.class} options={opts.class} value={formData.familyBackground} onChange={e => handleInputChange('familyBackground', e.target.value)} />
                                     <InputField label={opts.labels.edu} options={opts.education} value={formData.education} onChange={e => handleInputChange('education', e.target.value)} />
@@ -718,8 +718,8 @@ export default function App() {
                             </div>
 
                             {/* DEEP PSYCHOLOGY & EPIGENETICS */}
-                            <div className="md:col-span-2 space-y-8 pt-10 border-t-4 border-black/10">
-                                <h3 className="text-sm font-black bg-black text-white inline-block px-2 py-1 mb-2">DEEP PSYCHOLOGY & EPIGENETICS</h3>
+                            <div className="md:col-span-2 space-y-8 pt-10 border-t border-gray-200">
+                                <h3 className="text-xs font-semibold text-muted uppercase tracking-widest mb-4 flex items-center gap-2"><span className="w-6 h-0.5 bg-accent rounded"></span>DEEP PSYCHOLOGY & EPIGENETICS</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                     <InputField label={opts.labels.parentalStyle} options={opts.parentalStyle} value={formData.parentalStyle} onChange={e => handleInputChange('parentalStyle', e.target.value)} />
                                     <InputField label={opts.labels.pastRelationship} options={opts.pastRelationship} value={formData.pastRelationship} onChange={e => handleInputChange('pastRelationship', e.target.value)} />
@@ -733,8 +733,8 @@ export default function App() {
                             </div>
 
                             {/* RUNTIME STATUS */}
-                            <div className="md:col-span-2 space-y-8 pt-10 border-t-4 border-black/10">
-                                <h3 className="text-sm font-black bg-black text-white inline-block px-2 py-1 mb-2">{t.sections.status}</h3>
+                            <div className="md:col-span-2 space-y-8 pt-10 border-t border-gray-200">
+                                <h3 className="text-xs font-semibold text-muted uppercase tracking-widest mb-4 flex items-center gap-2"><span className="w-6 h-0.5 bg-accent rounded"></span>{t.sections.status}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <InputField
                                         label={opts.labels.currLoc}
@@ -752,10 +752,10 @@ export default function App() {
                                         value={formData.criticalEvent}
                                         onChange={e => handleInputChange('criticalEvent', e.target.value)}
                                         placeholder="例如：出國留學、創業失敗、親人離世、重大獲獎... (提供此資訊可大幅提升分析精度)"
-                                        className="w-full bg-white border-2 border-black rounded-none px-3 py-3 text-sm font-medium placeholder-gray-400 focus:outline-none focus:bg-white focus:border-green-700 transition-colors resize-none"
+                                        className="w-full bg-white/80 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent shadow-card transition-all duration-200 resize-none"
                                         rows="3"
                                     />
-                                    <p className="text-[10px] text-green-700 mt-2 font-bold">
+                                    <p className="text-[10px] text-accent mt-2 font-medium">
                                         ⚡ GIGO 原則：輸入的數據顆粒度越細，輸出的模型精確度越高
                                     </p>
                                 </div>
@@ -764,13 +764,13 @@ export default function App() {
 
                         <div className="mt-12">
                             {errorMsg && (
-                                <div className="mb-4 text-red-600 font-bold text-sm flex items-center gap-2 border-2 border-red-600 p-2 bg-red-50">
+                                <div className="mb-4 text-rose-600 font-medium text-sm flex items-center gap-2 border border-rose-200 p-3 bg-rose-50 rounded-xl">
                                     <AlertTriangle size={16} /> {errorMsg}
                                 </div>
                             )}
                             <button
                                 onClick={startAnalysis}
-                                className="w-full bg-black text-white font-black text-lg py-4 border-2 border-black hover:bg-green-600 hover:border-green-600 transition-colors uppercase tracking-widest flex justify-center items-center gap-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-bold text-lg py-4 rounded-xl hover:from-emerald-500 hover:to-emerald-600 transition-all uppercase tracking-widest flex justify-center items-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                             >
                                 {t.startBtn} <ArrowRight size={20} />
                             </button>
@@ -783,29 +783,29 @@ export default function App() {
 
                 {/* LOADING VIEW - 優化版 */}
                 {step === 'loading' && (
-                    <div className="w-full min-h-96 flex flex-col items-center justify-center border-2 border-black border-dashed bg-gray-50 p-8 animate-[fadeIn_0.5s_ease-out]">
-                        <BrainCircuit size={64} className="text-black mb-8 animate-[spin_3s_linear_infinite]" />
-                        <h2 className="text-3xl font-black mb-2 uppercase tracking-tighter animate-pulse">分析中</h2>
-                        <p className="text-sm font-bold text-gray-500 mb-6">AI 正在深度思考...</p>
+                    <div className="w-full min-h-96 flex flex-col items-center justify-center bg-paper rounded-2xl shadow-card p-12 animate-[fadeIn_0.5s_ease-out]">
+                        <BrainCircuit size={64} className="text-accent mb-8 animate-[spin_3s_linear_infinite]" />
+                        <h2 className="text-3xl font-bold mb-2 uppercase tracking-tight animate-pulse">分析中</h2>
+                        <p className="text-sm font-medium text-muted mb-6">AI 正在深度思考...</p>
 
                         {/* 動態訊息 */}
-                        <div className="text-sm font-bold text-green-700 mb-6 h-6 text-center">
+                        <div className="text-sm font-medium text-accent mb-6 h-6 text-center">
                             {loadingMessage}
                         </div>
 
                         {/* 真實進度條 */}
                         <div className="w-full max-w-md">
-                            <div className="flex justify-between text-xs font-bold text-gray-600 mb-2">
+                            <div className="flex justify-between text-xs font-medium text-muted mb-2">
                                 <span>處理進度</span>
                                 <span>{progress}%</span>
                             </div>
-                            <div className="w-full h-3 bg-gray-200 border-2 border-black overflow-hidden">
+                            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                                 <div
-                                    className="h-full bg-green-600 transition-all duration-500 ease-out"
+                                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 transition-all duration-500 ease-out rounded-full"
                                     style={{ width: `${progress}%` }}
                                 ></div>
                             </div>
-                            <p className="text-[10px] text-gray-500 mt-2 text-center">
+                            <p className="text-[10px] text-muted mt-3 text-center">
                                 💡 系統運作正常，請耐心等待...
                             </p>
                         </div>
@@ -864,7 +864,7 @@ export default function App() {
 
                         <button
                             onClick={() => { setStep('input'); setAnalysis(null); setErrorMsg(''); setChatHistory([]); }}
-                            className="mt-12 mx-auto flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-black uppercase tracking-widest border-b-2 border-transparent hover:border-black pb-1 transition-all"
+                            className="mt-12 mx-auto flex items-center gap-2 text-xs font-medium text-muted hover:text-accent uppercase tracking-widest border-b border-transparent hover:border-accent pb-1 transition-all"
                         >
                             <RefreshCw size={12} /> {t.restart}
                         </button>

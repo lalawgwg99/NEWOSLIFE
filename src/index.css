@@ -2,13 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
 :root {
-  font-family: 'Courier New', monospace;
-  line-height: 1.5;
+  font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
   color-scheme: light;
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #FAF3E0;
+  color: #1A1A1A;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -24,21 +27,23 @@ body {
   box-sizing: border-box;
 }
 
-/* Custom Scrollbar (Neo-Brutalism Style) */
+/* Custom Scrollbar (Modern Style) */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-left: 2px solid #000;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000;
-  border: 2px solid #fff;
+  background: #d1d5db;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #16a34a;
+  background: #9ca3af;
+  background-clip: content-box;
 }
